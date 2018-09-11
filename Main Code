@@ -1,0 +1,232 @@
+
+package beanmachine15_33;
+
+import javafx.animation.*;
+import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.scene.layout.*;
+import static javafx.scene.paint.Color.*;
+import javafx.scene.shape.Circle;
+import javafx.scene.shape.Line;
+import javafx.stage.Stage;
+import javafx.util.Duration;
+
+public class BeanMachine15_33 extends Application {
+    
+    @Override
+    public void start(Stage primaryStage) {
+        
+        //Pane root = new Pane();
+        BeanPane bean = new BeanPane();
+        //root.getChildren().add(bean);
+        
+        //Creates Animation
+        Timeline animation = new Timeline(
+            new KeyFrame(Duration.millis(100), e -> bean.dropBall()));
+        animation.setCycleCount(Timeline.INDEFINITE);
+        animation.play();
+        
+        Scene scene = new Scene(/*root*/bean, 300, 300);
+        
+        primaryStage.setTitle("Exercise15_33");
+        primaryStage.setScene(scene);
+        primaryStage.show();
+    }
+
+    public static void main(String[] args) {
+        launch(args);
+    }
+    
+}
+
+class BeanPane extends Pane{
+    
+    private int numBalls = 0;
+    private double radius = 4;
+    private int x = 150;
+    private int y = 0;
+    
+    private Circle balls[] = new Circle[10];
+    
+    public BeanPane(){
+        //Makes Pegs
+        int k = 150;
+        int l = 50;
+        int count = 0;
+        Circle peg;
+        for(int i = 1; i <= 7; i++){
+            for(int j = 0; j < i; j++){
+                peg = new Circle(k, l, 5);
+                getChildren().add(peg);
+                
+                k+= 30;
+                count++;
+                
+                if(count == i){
+                    k -= count * 30;
+                }
+            }
+            k -= 15;
+            l += 30;
+            count = 0;
+        }
+        
+        //Creates Top Of Machine
+        Line temp = new Line(135, 25, 135, 45);
+        getChildren().add(temp);
+        temp = new Line(165, 25, 165, 45);
+        getChildren().add(temp);
+        temp = new Line(135, 45, 30, 225);
+        getChildren().add(temp);
+        temp = new Line(165, 45, 270, 225);
+        getChildren().add(temp);
+        
+        //Creates Bottom Of Machine
+        temp = new Line(270, 225, 270, 290);
+        getChildren().add(temp);
+        temp = new Line(30, 225, 30, 290);
+        getChildren().add(temp);
+        temp = new Line(30, 290, 270, 290);
+        getChildren().add(temp);
+        
+        //Creates Seperate Slots
+        for(double i = 60; i < 260; i += 30){
+            temp = new Line(i, 230, i, 290);
+            getChildren().add(temp);
+        }
+        
+        for(int i = 0; i < 10; i++){
+            balls[i] = new Circle(150, -5, 5);
+            balls[i].setFill(DARKBLUE);
+            getChildren().add(balls[i]);
+        }
+        
+    }
+    
+    int increment = 5;
+    
+    //True means right and false means left
+    boolean dir;
+    boolean first = true;
+    
+    public void dropBall(){
+        //Resets first var
+        switch(y){
+            case 215:
+            case 185:
+            case 155:
+            case 125:
+            case 95:
+            case 65:
+            case 35:
+                first = true;
+        }
+        //Stops at 10 balls
+        if(numBalls == 10){
+        }
+        else{
+            //Checks for pins
+            if(y >= 240){
+                
+            }
+            else if(y >=  215){
+                if(first == true){
+                    setDir();
+                    first = false;
+                }
+                moveBall();
+            }
+            else if(y >= 185){
+                if(first == true){
+                    setDir();
+                    first = false;
+                }
+                moveBall();
+            }
+            else if(y >= 155){
+                if(first == true){
+                    setDir();
+                    first = false;
+                }
+                moveBall();
+            }
+            else if(y >= 125){
+                if(first == true){
+                    setDir();
+                    first = false;
+                }
+                moveBall();
+            }
+            else if(y >= 95){
+                if(first == true){
+                    setDir();
+                    first = false;
+                }
+                moveBall();
+            }
+            else if(y >= 65){
+                if(first == true){
+                    setDir();
+                    first = false;
+                }
+                moveBall();
+            }
+            else if(y >= 35){
+                if(first == true){
+                    setDir();
+                    first = false;
+                }
+                moveBall();
+            }
+            //Decides whether to move to the next ball
+            boolean move = false;
+            for(int i = 0; i < numBalls; i++){
+                //Checks for balls below it
+                if(balls[i].getCenterX() == x && balls[i].getCenterY() == y + 10){
+                    move = true;
+                }
+            }
+            //Switches to next ball
+            if(move || y > 280){
+                numBalls++;
+                y = -5;
+                x = 150;
+                first = true;
+            }
+            //Moves ball down
+            else{
+                balls[numBalls].setCenterY(y + increment);
+                y += increment;
+            }
+        }
+    }
+    
+    public void moveBall(){
+        //Changes direction to go left
+        if(dir == false){
+            increment = increment * -1;
+        }
+        //Moves ball left or right
+        balls[numBalls].setCenterY(y + 5);
+        y += 5;
+        balls[numBalls].setCenterX(x + increment);
+        x += increment;
+        //Resets direction
+        if(dir == false){
+            increment = increment * -1;
+        }
+    }
+    
+    //Randomly chooses direction
+    public void setDir(){
+        double num;
+        num = Math.random() * 10;
+            if (num < 5){
+                dir = false;
+            }
+            else{
+                dir = true;
+            }
+    }
+    
+}
